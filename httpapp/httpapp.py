@@ -111,7 +111,7 @@ class handler_class(BaseHTTPRequestHandler):
         global urlf
         global errorf
 
-        content_len = int(self.headers.getheader('content-length', 0))
+        content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
 
         if self.path in urlf.keys():
