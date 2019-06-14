@@ -54,15 +54,11 @@ def get(path):
     if localpath == "":
         localpath="index.html"
     filename = fs[subpath]+"/"+localpath
-    print(filename)
-    try:
-        with open(filename) as f:
-            line = ""
-            for item in f:
-                line += item
-            return line
-    except:
+    if os.path.isfile(filename):
+        with open(filename,"rb") as f:
+            return f.read()
+    else:
         return None
-    
+
         
     

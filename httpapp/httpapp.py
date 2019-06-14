@@ -88,9 +88,14 @@ class handler_class(BaseHTTPRequestHandler):
 
         if subpath is not None:
             content = httpfs.get(self.path)
-            self._set_headers(200)
-            self.wfile.write(content.encode())
-            return 
+            if content is not None:
+                self._set_headers(200)
+                self.wfile.write(content)
+                return
+            else:
+                self._set_headers(400)
+                self.wfile.write(errorf(self.path,self.command).encode())
+                return
             
             
         
