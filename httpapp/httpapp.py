@@ -78,7 +78,13 @@ class handler_class(BaseHTTPRequestHandler):
         
         if self.path in urlf.keys():
             self._set_headers(200)
-            self.wfile.write(urlf[self.path](self.path,self.command))
+            a = len(inspect.getargspec(urlf[self.path]).args)
+            if a == 1:
+                self.wfile.write(urlf[self.path](self.path).encode())
+            elif a == 2:
+                self.wfile.write(urlf[self.path](self.path,self.command).encode())
+            elif a == 3:
+                self.wfile.write(urlf[self.path](self.path,self.command,None).encode())
             return
         else:
             k = self.path.rfind('/')
@@ -88,18 +94,18 @@ class handler_class(BaseHTTPRequestHandler):
                     self._set_headers(200)
                     a = len(inspect.getargspec(urlf[subpath]).args)
                     if a == 1:
-                        self.wfile.write(urlf[subpath](self.path))
+                        self.wfile.write(urlf[subpath](self.path).encode())
                     elif a == 2:
-                        self.wfile.write(urlf[subpath](self.path,self.command))
+                        self.wfile.write(urlf[subpath](self.path,self.command).encode())
                     elif a == 3:
-                        self.wfile.write(urlf[subpath](self.path,self.command,None))
+                        self.wfile.write(urlf[subpath](self.path,self.command,None).encode())
                     return
                 else:
                     k = subpath[:-1].rfind('/')
                     subpath = subpath[:k+1]
 
         self._set_headers(400)
-        self.wfile.write(errorf(self.path,self.command))
+        self.wfile.write(errorf(self.path,self.command).encode())
         
     def do_POST(self):
         global urlf
@@ -110,7 +116,13 @@ class handler_class(BaseHTTPRequestHandler):
 
         if self.path in urlf.keys():
             self._set_headers(200)
-            self.wfile.write(urlf[self.path](self.path,self.command),post_body)
+            a = len(inspect.getargspec(urlf[self.path]).args)
+            if a == 1:
+                self.wfile.write(urlf[self.path](self.path).encode())
+            elif a == 2:
+                self.wfile.write(urlf[self.path](self.path,self.command).encode())
+            elif a == 3:
+                self.wfile.write(urlf[self.path](self.path,self.command,post_body).encode())
             return
         else:
             k = self.path.rfind('/')
@@ -120,18 +132,18 @@ class handler_class(BaseHTTPRequestHandler):
                     self._set_headers(200)
                     a = len(inspect.getargspec(urlf[subpath]).args)
                     if a == 1:
-                        self.wfile.write(urlf[subpath](self.path))
+                        self.wfile.write(urlf[subpath](self.path).encode())
                     elif a == 2:
-                        self.wfile.write(urlf[subpath](self.path,self.command))
+                        self.wfile.write(urlf[subpath](self.path,self.command).encode())
                     elif a == 3:
-                        self.wfile.write(urlf[subpath](self.path,self.command,post_body))
+                        self.wfile.write(urlf[subpath](self.path,self.command,post_body).encode())
                     return
                 else:
                     k = subpath[:-1].rfind('/')
                     subpath = subpath[:k+1]
 
         self._set_headers(400)
-        self.wfile.write(errorf(self.path,self.command))
+        self.wfile.write(errorf(self.path,self.command).encode())
         
 def run(port=8080,error_handler=error_default,log_handler=None):
     global errorf
