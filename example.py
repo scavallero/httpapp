@@ -21,8 +21,47 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import time
 import sys
-sys.path.append( '.' )
+sys.path.append( './httpapp' )
 
 import httpapp
+from httpapp import addurl
+from httpapp import addstatic
+
+
+@addurl('/')
+def root(p,m):
+    return "Hello from Python Http Application Server"
+
+@addurl('/postbody')
+def postbody(p,m,b):
+    print("Path: %s" % p)
+    print("Method: %s" % m)
+    print("Body: %s" % b)
+    return "Post received"
+
+@addurl('/pause')
+def pause(p,m):
+    time.sleep(20)
+    return "Pause complete"
+
+
+@addurl('/subpath/')
+def pause(p,m):
+    print("Path: %s" % p)
+    print("Method: %s" % m)
+    return "Get subpath"
+
+@addurl('/subpath/pollo/')
+def pollo(p,m):
+    print("Pollo: %s" % p)
+    print("Method: %s" % m)
+    return "Get subpath"
+
+
+addstatic("/pippo/pluto/","d:/Lorenzo")
+addstatic("/pippo/","d:/Max")
+
+
 httpapp.run()
