@@ -35,9 +35,12 @@ import inspect
 import logging
 import logging.handlers
 
+import httpfs
+
 # Callback dicrionary
 
 urlf={}
+
 errorf=None
 
 # Logger
@@ -57,6 +60,10 @@ def addurl(path):
         return f
     return decorator
 
+def addstatic(path,staticdir):
+    res = httpfs.add(path,staticdir)
+    return res
+
 def error_default(path,command):
     return '{"status":"error","value":"undefined url %s","methd":"%s"}' % (path,command)
 
@@ -75,6 +82,17 @@ class handler_class(BaseHTTPRequestHandler):
     def do_GET(self):
         global urlf
         global errorf
+        
+        subpath,localpath = httpfs.check(self.path)
+        
+
+        if subpath is not None:
+            content = httpfs.get(self.path)
+            self._set_headers(200)
+            self.wfile.write(content.encode())
+            return 
+            
+            
         
         if self.path in urlf.keys():
             self._set_headers(200)
